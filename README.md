@@ -48,3 +48,79 @@ https://github.com/docker/awesome-compose/tree/master/fastapi
     ln -s /etc/machine-id /var/lib/dbus/machine-id
     init 0
     ```
+    5. ทำการเตรียม stack swarm and Portainer CE 
+# Stack Swarm
+<a name="stack-swarm"></a>
+
+ - Manager Swarm
+
+   - Swarm init
+     ```
+     docker swarm init #รันในเครื่อง Manage
+     ```
+
+   - นำ Token Url ไป run บน worker ทุก Node ที่ต้องการให้เชื่อมต่อ
+
+   - Check Node Stack swarm
+     ```
+     docker node ls
+     ```
+
+   - install portainer CE
+     ```
+     curl -L https://downloads.portainer.io/ce2-17/portainer-agent-stack.yml -o portainer-agent-stack.yml
+     docker stack deploy -c portainer-agent-stack.yml portainer
+     ```
+   ### Ref
+   - https://github.com/pitimon/dockerswarm-inhoure#swarm-init
+
+6. ทำการเตรียม Revert Proxy (#revert-proxy)
+# Revert Proxy
+<a name="revert-proxy"></a>
+
+ - Manager Traefik
+
+   - Set IP สำหรับเครื่อง Client
+     - แก้ไขไฟล์ hosts
+       - windows C:\Windows\System32\drivers\etc\hosts
+       - Linux /etc/hosts
+     - เพิ่ม Domain ให้แต่ละโปรแกรมโดยเชื่อมเข้าสู่ IP ของ manager เช้น "ip manage" traefik.demo.local
+
+   - สร้าง Network ใหม่
+     ```
+     docker network create --driver=overlay traefik-public
+     ```
+
+   - Get ID Node 
+     ```
+     export NODE_ID=$(docker info -f '{{.Swarm.NodeID}}') 
+     echo $NODE_ID
+     ```
+
+   - สร้าง Label ของ Node Manage
+     ```
+     docker node update --label-add traefik-public.traefik-public-certificates=true $NODE_ID
+     ```
+
+   - set Treafik
+     ```
+     export EMAIL=user@smtp.com
+     export DOMAIN=<ชื่อ traefik domain ที่ต้องการให้เข้าถึง traefik>
+     export USERNAME=admin
+     export PASSWORD=<รหัสผ่าน traefik>
+     export HASHED_PASSWORD=$(openssl passwd -apr1 $PASSWORD)
+     echo $HASHED_PASSWORD
+     ```
+
+   - deploy traefik stack
+     ```
+     docker stack deploy -c traefik-host.yml traefik
+     ```
+     
+   - ทดลองเปิดหน้า Dashboard Traefik
+
+   ### Ref
+
+   - https://github.com/pitimon/dockerswarm-inhoure/tree/main/ep03-traefik
+
+# กำลังศึกษาต่อครับ
