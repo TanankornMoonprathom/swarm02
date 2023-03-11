@@ -9,7 +9,59 @@ https://tan-swarm02.xops.ipv9.me/
 
 
 # ขั้นตอนในการทำงาน
-# 1.Create docker-compose.yml
+# 1. Create Image from Dockerfile
+ 1. Create main.py
+    <details>
+    <summary>Show code</summary>
+
+    ```ruby   
+    from fastapi import FastAPI
+    app = FastAPI()
+    @app.get("/")
+    def hello_world():
+    return {"SPCN01": "OK"}
+    ```
+
+    </details>
+ 2. Create Dockerfile
+    <details>
+    <summary>Show code</summary>
+
+    ```ruby
+    # syntax = docker/dockerfile:1.4
+    FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9-slim AS builder
+    WORKDIR /app
+    COPY requirements.txt ./
+    RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+    COPY ./app ./app
+    FROM builder as dev-envs
+    RUN <<EOF
+    apt-get update
+    apt-get install -y --no-install-recommends git
+    EOF
+    RUN <<EOF
+    useradd -s /bin/bash -m vscode
+    groupadd docker
+    usermod -aG docker vscode
+    EOF
+    # install Docker tools (cli, buildx, compose)
+    COPY --from=gloursdocker/docker / /
+    ```
+
+    </details>
+ 3. Build image from Dockerfile
+ 
+    ```
+    docker build . -t <usernameDockerHub>/<repo>:<tag> #tanankorn/fastapi-api:0205
+    ```
+ 4. Push image to DockerHub
+
+     ```
+     docker push <image ID> <usernameDockerHub>/<repo>:<tag> #tanankorn/fastapi-api:0205
+     ```
+
+# 2.Create docker-compose.yml
  1. Create docker-compose.yml
     <details>
     <summary>Show code</summary>
@@ -43,24 +95,24 @@ https://tan-swarm02.xops.ipv9.me/
     webproxy:
     external: true
     ```
-# 2.Push docker-compose.yml to github swarm01
-# 3.Open https://portainer.ipv9.me/
+# 3.Push docker-compose.yml to github swarm02
+# 4.Open https://portainer.ipv9.me/
  
  ![image](https://user-images.githubusercontent.com/119097663/224484388-a617001c-cf34-49ce-9d7a-3c3d4b8bfc76.png)
 
-# 4.Click Cluster Xopx.ipv9.xyz on Portainer
+# 5.Click Cluster Xopx.ipv9.xyz on Portainer
  
  ![image](https://user-images.githubusercontent.com/119097663/224484436-f6e5f9a5-5520-409b-8d12-1cfc947404f5.png)
  
-# 5.Click menu Stack on Cluster Xopx.ipv9.xyz
+# 6.Click menu Stack on Cluster Xopx.ipv9.xyz
  
  ![image](https://user-images.githubusercontent.com/119097663/224484471-88edcac4-dcd8-437d-b741-ead184381b48.png)
 
-# 6.Click button Add Stack
+# 7.Click button Add Stack
 
 ![image](https://user-images.githubusercontent.com/119097663/224484514-0e6de6f0-c04e-44bf-bddb-df9bf0b2bb83.png)
 
-# 7.Click Build medthod is Repository
+# 8.Click Build medthod is Repository
  
  ![image](https://user-images.githubusercontent.com/119097663/224484639-134b525a-bae2-4187-92ad-f1ee12e08084.png)
 
