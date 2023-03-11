@@ -9,7 +9,7 @@ https://tan-swarm02.xops.ipv9.me/
 
 
 # ขั้นตอนในการทำงาน
-# 2.Create docker-compose.yml
+# 1.Create docker-compose.yml
  1. Create docker-compose.yml
     <details>
     <summary>Show code</summary>
@@ -43,29 +43,29 @@ https://tan-swarm02.xops.ipv9.me/
     webproxy:
     external: true
     ```
-# 3.Push docker-compose.yml to github swarm01
-# 4.Open https://portainer.ipv9.me/
+# 2.Push docker-compose.yml to github swarm01
+# 3.Open https://portainer.ipv9.me/
  
  ![image](https://user-images.githubusercontent.com/119097663/224484388-a617001c-cf34-49ce-9d7a-3c3d4b8bfc76.png)
 
-# 5.Click Cluster Xopx.ipv9.xyz on Portainer
+# 4.Click Cluster Xopx.ipv9.xyz on Portainer
  
  ![image](https://user-images.githubusercontent.com/119097663/224484436-f6e5f9a5-5520-409b-8d12-1cfc947404f5.png)
  
-# 6.Click menu Stack on Cluster Xopx.ipv9.xyz
+# 5.Click menu Stack on Cluster Xopx.ipv9.xyz
  
  ![image](https://user-images.githubusercontent.com/119097663/224484471-88edcac4-dcd8-437d-b741-ead184381b48.png)
 
-# 7.Click button Add Stack
+# 6.Click button Add Stack
 
 ![image](https://user-images.githubusercontent.com/119097663/224484514-0e6de6f0-c04e-44bf-bddb-df9bf0b2bb83.png)
 
-# 8.Click Build medthod is Repository
+# 7.Click Build medthod is Repository
  
  ![image](https://user-images.githubusercontent.com/119097663/224484639-134b525a-bae2-4187-92ad-f1ee12e08084.png)
 
  - Name = name Stack
-  - Repository URL = https://github.com/TanankornMoonprathom/swarm01
+  - Repository URL = TanankornMoonprathom/swarm02 (github.com)
   - Repository reference = refs/heads/main
   - Compose path = name Compose file
   - Automatic updates = enable
