@@ -1,126 +1,72 @@
 # wakatime
-https://wakatime.com/@spcn01/projects/kjcjhxqdhv?start=2023-02-21&end=2023-02-27
-
+https://wakatime.com/projects/swarm02
+ 
 # Ref awaresome-compose
 https://github.com/docker/awesome-compose/tree/master/fastapi
 
+# URL Farst-API
+https://tan-swarm02.xops.ipv9.me/
 
-### ขั้นตอนการติดตั้ง และใช้งาน ใน VM
- 1. Set Template 
 
-    - set time
-      ```
-      timedatectl set-timezone Asia/Bangkok
-      ```
+# ขั้นตอนในการทำงาน
+# 2.Create docker-compose.yml
+ 1. Create docker-compose.yml
+    <details>
+    <summary>Show code</summary>
 
-    - install Docker
-      ```
-      apt update; apt upgrade -y #อัปเดตแพ็คเกจภายในเครื่อง
-
-      apt-get install ca-certificates curl wget gnupg lsb-release -y #ติดตั้งแพ็คเกจ
-
-      mkdir -m 0755 -p /etv/apt/keyrings
-
-      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg #ดาวโหลดไฟล์แพ็คเกจ Docker
-
-      echo \ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \ $(lsb_release -cs) stable" |  tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-      apt-get update #อัปเดทไฟล์แพ็คเกจเพื่อไว้สำหรับให้ติดตั้ง
-      apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y #ติดตั้ง Docker
-
-      reboot
-      ```
-
- 2. Clone Templete ออกมา 3 Node คือ
-    - manage
-    - work1
-    - work2
-
- 3. Set Hostname
+    ```ruby
+    version: '3.7'
+    services:
+    api:
+    image: tanankorn/fastapi-api:0205
+    networks:
+    - webproxy
+    environment:
+    PORT: 8000
+    logging:
+    driver: json-file
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - app:/app
+    deploy:
+    replicas: 1
+    labels:
+    - traefik.docker.network=webproxy
+    - traefik.enable=true
+    - traefik.http.routers.${APPNAME}-https.entrypoints=websecure
+    - traefik.http.routers.${APPNAME}-https.rule=Host("${APPNAME}.xops.ipv9.me")
+    - traefik.http.routers.${APPNAME}-https.tls.certresolver=default
+    - traefik.http.services.${APPNAME}.loadbalancer.server.port=8000
+    volumes:
+    app:          
+    networks:
+    webproxy:
+    external: true
     ```
-    hostnamectl set-hostname "ชื่อ Hostname โดยต้องห้ามซ้ำ" #spcn19-swarm02
-    ```
+# 3.Push docker-compose.yml to github swarm01
+# 4.Open https://portainer.ipv9.me/
+ 
+ ![image](https://user-images.githubusercontent.com/119097663/224484388-a617001c-cf34-49ce-9d7a-3c3d4b8bfc76.png)
 
- 4. Reset Machine ID เพื่อขอ Public IP จาก DHCP 
-    ```
-    cp /dev/null /etc/machine-id
-    rm /var/lib/dbus/machine-id
-    ln -s /etc/machine-id /var/lib/dbus/machine-id
-    init 0
-    ```
-    5. ทำการเตรียม stack swarm and Portainer CE 
-# Stack Swarm
-<a name="stack-swarm"></a>
+# 5.Click Cluster Xopx.ipv9.xyz on Portainer
+ 
+ ![image](https://user-images.githubusercontent.com/119097663/224484436-f6e5f9a5-5520-409b-8d12-1cfc947404f5.png)
+ 
+# 6.Click menu Stack on Cluster Xopx.ipv9.xyz
+ 
+ ![image](https://user-images.githubusercontent.com/119097663/224484471-88edcac4-dcd8-437d-b741-ead184381b48.png)
 
- - Manager Swarm
+# 7.Click button Add Stack
 
-   - Swarm init
-     ```
-     docker swarm init #รันในเครื่อง Manage
-     ```
+![image](https://user-images.githubusercontent.com/119097663/224484514-0e6de6f0-c04e-44bf-bddb-df9bf0b2bb83.png)
 
-   - นำ Token Url ไป run บน worker ทุก Node ที่ต้องการให้เชื่อมต่อ
+# 8.Click Build medthod is Repository
+ 
+ ![image](https://user-images.githubusercontent.com/119097663/224484639-134b525a-bae2-4187-92ad-f1ee12e08084.png)
 
-   - Check Node Stack swarm
-     ```
-     docker node ls
-     ```
-
-   - install portainer CE
-     ```
-     curl -L https://downloads.portainer.io/ce2-17/portainer-agent-stack.yml -o portainer-agent-stack.yml
-     docker stack deploy -c portainer-agent-stack.yml portainer
-     ```
-   ### Ref
-   - https://github.com/pitimon/dockerswarm-inhoure#swarm-init
-
-6. ทำการเตรียม Revert Proxy (#revert-proxy)
-# Revert Proxy
-<a name="revert-proxy"></a>
-
- - Manager Traefik
-
-   - Set IP สำหรับเครื่อง Client
-     - แก้ไขไฟล์ hosts
-       - windows C:\Windows\System32\drivers\etc\hosts
-       - Linux /etc/hosts
-     - เพิ่ม Domain ให้แต่ละโปรแกรมโดยเชื่อมเข้าสู่ IP ของ manager เช้น "ip manage" traefik.demo.local
-
-   - สร้าง Network ใหม่
-     ```
-     docker network create --driver=overlay traefik-public
-     ```
-
-   - Get ID Node 
-     ```
-     export NODE_ID=$(docker info -f '{{.Swarm.NodeID}}') 
-     echo $NODE_ID
-     ```
-
-   - สร้าง Label ของ Node Manage
-     ```
-     docker node update --label-add traefik-public.traefik-public-certificates=true $NODE_ID
-     ```
-
-   - set Treafik
-     ```
-     export EMAIL=user@smtp.com
-     export DOMAIN=<ชื่อ traefik domain ที่ต้องการให้เข้าถึง traefik>
-     export USERNAME=admin
-     export PASSWORD=<รหัสผ่าน traefik>
-     export HASHED_PASSWORD=$(openssl passwd -apr1 $PASSWORD)
-     echo $HASHED_PASSWORD
-     ```
-
-   - deploy traefik stack
-     ```
-     docker stack deploy -c traefik-host.yml traefik
-     ```
-     
-   - ทดลองเปิดหน้า Dashboard Traefik
-
-   ### Ref
-
-   - https://github.com/pitimon/dockerswarm-inhoure/tree/main/ep03-traefik
-
-# กำลังศึกษาต่อครับ
+ - Name = name Stack
+  - Repository URL = https://github.com/TanankornMoonprathom/swarm01
+  - Repository reference = refs/heads/main
+  - Compose path = name Compose file
+  - Automatic updates = enable
+    - Fetch interval = time check change on compose file from github 
