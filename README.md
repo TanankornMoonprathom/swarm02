@@ -7,6 +7,8 @@ https://github.com/docker/awesome-compose/tree/master/fastapi
 # URL Farst-API
 https://tan-swarm02.xops.ipv9.me/
 
+# git swarm02
+https://github.com/TanankornMoonprathom/swarm02.git
 
 # ขั้นตอนในการทำงาน
 # 1. Create Image from Dockerfile
@@ -117,7 +119,7 @@ https://tan-swarm02.xops.ipv9.me/
  ![image](https://user-images.githubusercontent.com/119097663/224484639-134b525a-bae2-4187-92ad-f1ee12e08084.png)
 
  - Name = name Stack
-  - Repository URL = TanankornMoonprathom/swarm02 (github.com)
+  - Repository URL = https://github.com/TanankornMoonprathom/swarm02.git
   - Repository reference = refs/heads/main
   - Compose path = name Compose file
   - Automatic updates = enable
