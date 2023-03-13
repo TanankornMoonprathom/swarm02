@@ -11,8 +11,8 @@ https://tan-swarm02.xops.ipv9.me/
 https://github.com/TanankornMoonprathom/swarm02.git
 
 # ขั้นตอนในการทำงาน
-# 1. Create Image from Dockerfile
- 1. Create main.py
+# 1. สร้าง Image from Dockerfile
+ 1. สร้าง main.py
     <details>
     <summary>Show code</summary>
 
@@ -25,7 +25,7 @@ https://github.com/TanankornMoonprathom/swarm02.git
     ```
 
     </details>
- 2. Create Dockerfile
+ 2. สร้าง Dockerfile
     <details>
     <summary>Show code</summary>
 
@@ -63,8 +63,8 @@ https://github.com/TanankornMoonprathom/swarm02.git
      docker push <image ID> <usernameDockerHub>/<repo>:<tag> #tanankorn/fastapi-api:0205
      ```
 
-# 2.Create docker-compose.yml
- 1. Create docker-compose.yml
+# 2.สร้าง docker-compose.yml
+ 1. สร้างไฟล์ docker-compose.yml
     <details>
     <summary>Show code</summary>
 
@@ -97,8 +97,8 @@ https://github.com/TanankornMoonprathom/swarm02.git
     webproxy:
     external: true
     ```
-# 3.Push docker-compose.yml to github swarm02
-# 4.Open https://portainer.ipv9.me/
+# 3.Push docker-compose.yml ไปยัง github swarm02
+# 4.เปิด https://portainer.ipv9.me/
  
  ![image](https://user-images.githubusercontent.com/119097663/224484388-a617001c-cf34-49ce-9d7a-3c3d4b8bfc76.png)
 
@@ -110,7 +110,7 @@ https://github.com/TanankornMoonprathom/swarm02.git
  
  ![image](https://user-images.githubusercontent.com/119097663/224484471-88edcac4-dcd8-437d-b741-ead184381b48.png)
 
-# 7.Click button Add Stack
+# 7.Click ปุ่ม Add Stack
 
 ![image](https://user-images.githubusercontent.com/119097663/224484514-0e6de6f0-c04e-44bf-bddb-df9bf0b2bb83.png)
 
